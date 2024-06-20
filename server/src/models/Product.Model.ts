@@ -9,7 +9,7 @@ interface ProductSchema extends Document{
     category: string,
     image: string,
     sold: boolean,
-    dateOfSale: string
+    dateOfSale: Date
 }
 
 
@@ -21,7 +21,7 @@ const productSchema: Schema<ProductSchema> = new Schema<ProductSchema>({
     category: { type: String, required: true },
     image: { type: String, required: true },
     sold: { type: Boolean, default: false },
-    dateOfSale: { type: String, required: true },
+    dateOfSale: { type: Date, required: true }
 });
 
 

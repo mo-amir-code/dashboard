@@ -5,7 +5,7 @@ import {
     Title,
     Tooltip,
   } from "chart.js/auto";
-  import { Bar, Pie } from "react-chartjs-2";
+  import { Bar } from "react-chartjs-2";
   import { useAPIContext } from "../context/apiContext";
   import { useEffect, useState } from "react";
   import { getMonthNumber } from "../utils/services";

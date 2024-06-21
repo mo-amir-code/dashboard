@@ -10,7 +10,6 @@ import { httpAxios } from "../utils/services";
 import { TransactionType } from "../utils/types";
 
 interface APIContextType {
-  isLoading: boolean;
   fetchTransactions: Function;
   fetchStatistics: Function;
   fetchBar: Function;
@@ -28,7 +27,6 @@ export type PieType = {
 };
 
 const APIContextInitialValue: APIContextType = {
-  isLoading: false,
   fetchTransactions: () => {},
   fetchStatistics: () => {},
   fetchPie: () => {},
@@ -59,7 +57,6 @@ type StatisticType = {
 const APIContext = createContext<APIContextType>(APIContextInitialValue);
 
 const ApiContextProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [statistics, setStatistics] = useState<StatisticType>({
@@ -156,7 +153,6 @@ const ApiContextProvider = ({ children }: { children: ReactNode }) => {
   return (
     <APIContext.Provider
       value={{
-        isLoading,
         fetchTransactions,
         fetchStatistics,
         fetchPie,

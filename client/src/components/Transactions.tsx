@@ -141,7 +141,7 @@ const Transactions = () => {
 
   useEffect(() => {
     fetchTransactions({ query });
-  }, [query]);
+  }, [query, fetchTransactions]);
 
   return (
     <div className="flex flex-wrap -mx-3 mb-5">

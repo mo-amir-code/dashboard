@@ -11,7 +11,9 @@ const getProductTransactions = tryCatch(async (req, res, next) => {
     return next(new ErrorHandler("Required fields are missing", 400));
   }
 
-  let query: any = {};
+  let query: any = { $or: [] };
+  
+  const skip = (page - 1) * perPage;
 
   if (search) {
     const priceMatch = search.match(/(\d+)/);
@@ -24,9 +26,20 @@ const getProductTransactions = tryCatch(async (req, res, next) => {
     if (priceValue) {
       query.$or.push({ price: { $lte: priceValue } });
     }
+
+    const totalItems = await Product.countDocuments(query);
+    const transactions = await Product.find(query).skip(skip).limit(perPage);
+
+    return res.status(200).json({
+      success: true,
+      message: "Transactions fetched",
+      data:{
+        transactions,
+        totalItems
+      }
+    });
   }
 
- 
   const [year, monthStr] = month.split("-").map(Number);
   if (!year || !monthStr || monthStr < 1 || monthStr > 12) {
     return next(new ErrorHandler("Invalid month format. Use YYYY-MM", 400));
@@ -41,14 +54,16 @@ const getProductTransactions = tryCatch(async (req, res, next) => {
 
   query.$or.push({ dateOfSale: { $gte: startDate, $lte: endDate } });
 
-  const skip = (page - 1) * perPage;
-
-  const data = await Product.find(query).skip(skip).limit(perPage);
+  const totalItems = await Product.countDocuments(query);
+  const transactions = await Product.find(query).skip(skip).limit(perPage);
 
   return res.status(200).json({
     success: true,
     message: "Transactions fetched",
-    data,
+    data:{
+      transactions,
+      totalItems
+    }
   });
 });
 
@@ -61,7 +76,6 @@ const getStatistics = tryCatch(async (req, res, next) => {
 
   let query: any = {};
 
-  
   const [year, monthStr] = month.split("-").map(Number);
   if (!year || !monthStr || monthStr < 1 || monthStr > 12) {
     return next(new ErrorHandler("Invalid month format. Use YYYY-MM", 400));
@@ -108,7 +122,6 @@ const getPieChartData = tryCatch(async (req, res, next) => {
     return next(new ErrorHandler("Required field is missing", 400));
   }
 
-  
   const [year, monthStr] = month.split("-").map(Number);
   if (!year || !monthStr || monthStr < 1 || monthStr > 12) {
     return next(new ErrorHandler("Invalid month format. Use YYYY-MM", 400));
@@ -156,14 +169,12 @@ const getBarChartData = tryCatch(async (req, res, next) => {
     return next(new ErrorHandler("Required field is missing", 400));
   }
 
- 
   const [yearStr, monthStr] = month.split("-").map(Number);
   if (!yearStr || !monthStr || monthStr < 1 || monthStr > 12) {
     return next(new ErrorHandler("Invalid month format. Use YYYY-MM", 400));
   }
 
-  const startMonth = monthStr - 1; 
-
+  const startMonth = monthStr - 1;
 
   const data = await Product.aggregate([
     {
@@ -200,4 +211,9 @@ const getBarChartData = tryCatch(async (req, res, next) => {
   });
 });
 
-export { getProductTransactions, getStatistics, getPieChartData, getBarChartData };
+export {
+  getProductTransactions,
+  getStatistics,
+  getPieChartData,
+  getBarChartData,
+};

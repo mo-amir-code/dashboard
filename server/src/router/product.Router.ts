@@ -4,7 +4,7 @@ import {
   getPieChartData,
   getProductTransactions,
   getStatistics,
-} from "../controller/production.controller.js";
+} from "../controller/product.controller.js";
 
 const router: Router = express.Router();
 

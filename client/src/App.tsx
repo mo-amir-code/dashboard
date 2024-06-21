@@ -1,9 +1,10 @@
+import Transactions from "./components/Transactions"
 
 
 const App = () => {
   return (
-    <main> 
-      
+    <main className="max-w-7xl mx-auto" > 
+      <Transactions />
     </main>
   )
 }
